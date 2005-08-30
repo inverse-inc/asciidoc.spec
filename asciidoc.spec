@@ -27,7 +27,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__install} -d $RPM_BUILD_ROOT/%{_mandir}/man1
 
 %{__install} -m 0644 *.conf $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc
-(cd $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc; ln -s ../../%{_datadir}/asciidoc/stylesheets .)
+ln -s %{_datadir}/asciidoc/stylesheets $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/
 %{__install} -m 0644 filters/{code-filter.conf,code-filter.py} $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/filters/
 %{__install} -D -m 0755 asciidoc.py $RPM_BUILD_ROOT/%{_bindir}/asciidoc
 %{__install} -m 0644 doc/asciidoc.1  $RPM_BUILD_ROOT/%{_mandir}/man1
@@ -45,9 +45,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc README BUGS CHANGELOG COPYRIGHT doc examples
 
 %changelog
-* Mon Aug 29 2005 Josh Boyer <jwboyer@jdub.homelinux.org> - 7.0.2-1
-- Update to latest version
-- Fix remaining issues from review
+* Mon Aug 29 2005 Chris Wright <chrisw@osdl.org> - 7.0.2-1
+- convert spec file to UTF-8
+- Source should be URL
+- update to 7.0.2
 
 * Fri Aug 19 2005 Chris Wright <chrisw@osdl.org> - 7.0.1-3
 - consistent use of RPM_BUILD_ROOT
@@ -57,18 +58,19 @@ rm -rf $RPM_BUILD_ROOT
 - use _datadir
 - use config and _sysconfdir
 
-* Wed Jun 29 2005 Terje R�sten <terje.rosten@ntnu.no> - 7.0.1-1
+* Wed Jun 29 2005 Terje RÃ¸sten <terje.rosten@ntnu.no> - 7.0.1-1
 - 7.0.1
 - Drop patch now upstream
-- Build as noarch (Petr Kl�ma)
+- Build as noarch (Petr KlÃ­ma)
 
-* Sat Jun 11 2005 Terje R�sten <terje.rosten@ntnu.no> - 7.0.0-0.3
+* Sat Jun 11 2005 Terje RÃ¸sten <terje.rosten@ntnu.no> - 7.0.0-0.3
 - Add include patch 
 
-* Fri Jun 10 2005 Terje R�sten <terje.rosten@ntnu.no> - 7.0.0-0.2
+* Fri Jun 10 2005 Terje RÃ¸sten <terje.rosten@ntnu.no> - 7.0.0-0.2
 - Fix stylesheets according to Stuart
 
-* Fri Jun 10 2005 Terje R�sten <terje.rosten@ntnu.no> - 7.0.0-0.1
+* Fri Jun 10 2005 Terje RÃ¸sten <terje.rosten@ntnu.no> - 7.0.0-0.1
 - Initial package
 - Based on Debian package, thx!
+
 
