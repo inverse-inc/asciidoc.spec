@@ -1,7 +1,7 @@
 Summary: Text based document generation
 Name: asciidoc
 Version: 7.0.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPL
 Group: Applications/System
 URL: http://www.methods.co.nz/asciidoc/
@@ -45,6 +45,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README BUGS CHANGELOG COPYRIGHT doc examples
 
 %changelog
+* Tue Feb 28 2006 Chris Wright <chrisw@redhat.com> - 7.0.2-2
+- rebuild for Fedora Extras 5
+
 * Mon Aug 29 2005 Chris Wright <chrisw@osdl.org> - 7.0.2-1
 - convert spec file to UTF-8
 - Source should be URL
