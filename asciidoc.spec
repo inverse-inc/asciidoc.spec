@@ -1,7 +1,7 @@
 Summary: Text based document generation
 Name: asciidoc
 Version: 7.0.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPL
 Group: Applications/System
 URL: http://www.methods.co.nz/asciidoc/
@@ -45,6 +45,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README BUGS CHANGELOG COPYRIGHT doc examples
 
 %changelog
+* Thu Sep 14 2006 Chris Wright <chrisw@redhat.com> - 7.0.2-3
+- rebuild for Fedora Extras 6
+
 * Tue Feb 28 2006 Chris Wright <chrisw@redhat.com> - 7.0.2-2
 - rebuild for Fedora Extras 5
 
