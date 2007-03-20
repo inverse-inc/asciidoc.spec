@@ -1,7 +1,7 @@
 Summary: Text based document generation
 Name: asciidoc
-Version: 7.0.2
-Release: 3%{?dist}
+Version: 8.1.0
+Release: 1%{?dist}
 License: GPL
 Group: Applications/System
 URL: http://www.methods.co.nz/asciidoc/
@@ -22,16 +22,39 @@ to HTML and DocBook markups using the asciidoc(1) command.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__install} -d $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/filters
-%{__install} -d $RPM_BUILD_ROOT/%{_datadir}/asciidoc
-%{__install} -d $RPM_BUILD_ROOT/%{_mandir}/man1
+# make directory structure
+%{__install} -d $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/filters		\
+	$RPM_BUILD_ROOT/%{_datadir}/asciidoc/docbook-xsl		\
+	$RPM_BUILD_ROOT/%{_datadir}/asciidoc/stylesheets		\
+	$RPM_BUILD_ROOT/%{_datadir}/asciidoc/javascripts		\
+	$RPM_BUILD_ROOT/%{_datadir}/asciidoc/images/icons/callouts	\
+	$RPM_BUILD_ROOT/%{_bindir}					\
+	$RPM_BUILD_ROOT/%{_mandir}/man1
 
+# real conf data goes to sysconfdir, rest goes to datadir
 %{__install} -m 0644 *.conf $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc
+%{__install} -m 0644 filters/*.conf $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/filters/
+%{__install} filters/*.py $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/filters/
+
+# symlinks so asciidoc works
+ln -s %{_datadir}/asciidoc/docbook-xsl $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/
 ln -s %{_datadir}/asciidoc/stylesheets $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/
-%{__install} -m 0644 filters/{code-filter.conf,code-filter.py} $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/filters/
-%{__install} -D -m 0755 asciidoc.py $RPM_BUILD_ROOT/%{_bindir}/asciidoc
-%{__install} -m 0644 doc/asciidoc.1  $RPM_BUILD_ROOT/%{_mandir}/man1
-%{__cp} -av images/ stylesheets/ $RPM_BUILD_ROOT/%{_datadir}/asciidoc/
+ln -s %{_datadir}/asciidoc/javascripts $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/
+ln -s %{_datadir}/asciidoc/images $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/
+
+# binaries
+%{__install} asciidoc.py $RPM_BUILD_ROOT/%{_bindir}/asciidoc
+%{__install} a2x $RPM_BUILD_ROOT/%{_bindir}/
+
+# manpages
+%{__install} -m 0644 doc/*.1  $RPM_BUILD_ROOT/%{_mandir}/man1
+
+# ancillary data
+%{__install} -m 0644 docbook-xsl/*.xsl $RPM_BUILD_ROOT/%{_datadir}/asciidoc/docbook-xsl
+%{__install} -m 0644 stylesheets/*.css $RPM_BUILD_ROOT/%{_datadir}/asciidoc/stylesheets/
+%{__install} -m 0644 javascripts/*.js $RPM_BUILD_ROOT/%{_datadir}/asciidoc/javascripts
+%{__install} -m 0644 images/icons/callouts/* $RPM_BUILD_ROOT/%{_datadir}/asciidoc/images/icons/callouts
+%{__install} -m 0644 images/icons/{README,*.png} $RPM_BUILD_ROOT/%{_datadir}/asciidoc/images/icons
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -39,12 +62,15 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,0755)
 %config(noreplace) %{_sysconfdir}/asciidoc
-%{_bindir}/asciidoc
+%{_bindir}/*
 %{_mandir}/man1/*
 %{_datadir}/asciidoc/
 %doc README BUGS CHANGELOG COPYRIGHT doc examples
 
 %changelog
+* Mon Mar 19 2007 Chris Wright <chrisw@redhat.com> - 8.1.0-1
+- update to asciidoc 8.1.0
+
 * Thu Sep 14 2006 Chris Wright <chrisw@redhat.com> - 7.0.2-3
 - rebuild for Fedora Extras 6
 
