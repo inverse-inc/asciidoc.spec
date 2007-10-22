@@ -1,6 +1,6 @@
 Summary: Text based document generation
 Name: asciidoc
-Version: 8.2.2
+Version: 8.2.3
 Release: 1%{?dist}
 License: GPL
 Group: Applications/System
@@ -68,6 +68,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README BUGS CHANGELOG COPYRIGHT doc examples
 
 %changelog
+* Mon Oct 22 2007 Florian La Roche <laroche@redhat.com> - 8.2.3-1
+- new upstream version 8.2.3
+
 * Sat Sep 01 2007 Florian La Roche <laroche@redhat.com> - 8.2.2-1
 - new upstream version 8.2.2
 
