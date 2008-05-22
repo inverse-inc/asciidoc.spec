@@ -1,8 +1,10 @@
 Summary: Text based document generation
 Name: asciidoc
 Version: 8.2.5
-Release: 2%{?dist}
-License: GPL
+Release: 3%{?dist}
+# The python code does not specify a version.
+# The javascript example code is GPLv2+.
+License: GPL+ and GPLv2+
 Group: Applications/System
 URL: http://www.methods.co.nz/asciidoc/
 Source0: http://www.methods.co.nz/asciidoc/%{name}-%{version}.tar.gz
@@ -68,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README BUGS CHANGELOG COPYRIGHT
 
 %changelog
+* Thu May 22 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 8.2.5-3
+- fix license tag
+
 * Wed Dec 05 2007 Florian La Roche <laroche@redhat.com> - 8.2.5-2
 - remove doc/examples from filelist due to dangling symlinks
 
