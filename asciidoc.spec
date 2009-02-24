@@ -1,7 +1,7 @@
 Summary: Text based document generation
 Name: asciidoc
 Version: 8.2.5
-Release: 3%{?dist}
+Release: 4%{?dist}
 # The python code does not specify a version.
 # The javascript example code is GPLv2+.
 License: GPL+ and GPLv2+
@@ -70,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README BUGS CHANGELOG COPYRIGHT
 
 %changelog
+* Mon Feb 23 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.2.5-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
 * Thu May 22 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 8.2.5-3
 - fix license tag
 
