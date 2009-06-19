@@ -1,7 +1,7 @@
 Summary: Text based document generation
 Name: asciidoc
-Version: 8.2.5
-Release: 4%{?dist}
+Version: 8.4.5
+Release: 1%{?dist}
 # The python code does not specify a version.
 # The javascript example code is GPLv2+.
 License: GPL+ and GPLv2+
@@ -25,7 +25,10 @@ to HTML and DocBook markups using the asciidoc(1) command.
 %install
 rm -rf $RPM_BUILD_ROOT
 # make directory structure
-%{__install} -d $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/filters		\
+%{__install} -d $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/filters/code	\
+        -d $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/filters/music	\
+        -d $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/filters/source	\
+        -d $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/filters/graphviz	\
 	$RPM_BUILD_ROOT/%{_datadir}/asciidoc/docbook-xsl		\
 	$RPM_BUILD_ROOT/%{_datadir}/asciidoc/stylesheets		\
 	$RPM_BUILD_ROOT/%{_datadir}/asciidoc/javascripts		\
@@ -35,8 +38,13 @@ rm -rf $RPM_BUILD_ROOT
 
 # real conf data goes to sysconfdir, rest goes to datadir
 %{__install} -m 0644 *.conf $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc
-%{__install} -m 0644 filters/*.conf $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/filters/
-%{__install} filters/*.py $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/filters/
+%{__install} -m 0644 filters/code/*.conf $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/filters/code/
+%{__install} -m 0644 filters/music/*.conf $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/filters/music/
+%{__install} -m 0644 filters/source/*.conf $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/filters/source/
+%{__install} -m 0644 filters/graphviz/*.conf $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/filters/graphviz/
+%{__install} filters/code/*.py $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/filters/code/
+%{__install} filters/music/*.py $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/filters/music/
+%{__install} filters/graphviz/*.py $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/filters/graphviz/
 
 # symlinks so asciidoc works
 ln -s %{_datadir}/asciidoc/docbook-xsl $RPM_BUILD_ROOT/%{_sysconfdir}/asciidoc/
@@ -70,6 +78,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README BUGS CHANGELOG COPYRIGHT
 
 %changelog
+* Fri Jun 19 2009 Dave Airlie <airlied@redhat.com> 8.4.5-1
+- new upstream version 8.4.5 - required by X.org libXi to build
+
 * Mon Feb 23 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.2.5-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
