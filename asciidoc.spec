@@ -1,7 +1,7 @@
 Summary: Text based document generation
 Name: asciidoc
 Version: 8.4.5
-Release: 1%{?dist}
+Release: 2%{?dist}
 # The python code does not specify a version.
 # The javascript example code is GPLv2+.
 License: GPL+ and GPLv2+
@@ -78,6 +78,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README BUGS CHANGELOG COPYRIGHT
 
 %changelog
+* Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.4.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
 * Fri Jun 19 2009 Dave Airlie <airlied@redhat.com> 8.4.5-1
 - new upstream version 8.4.5 - required by X.org libXi to build
 
