@@ -1,7 +1,9 @@
+%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+
 Summary: Text based document generation
 Name: asciidoc
 Version: 8.4.5
-Release: 3%{?dist}
+Release: 4%{?dist}
 # The python code does not specify a version.
 # The javascript example code is GPLv2+.
 License: GPL+ and GPLv2+
@@ -12,7 +14,10 @@ Source0: http://www.methods.co.nz/asciidoc/%{name}-%{version}.tar.gz
 Patch0: asciidoc-8.4.5-datadir.patch
 # https://bugzilla.redhat.com/506953
 Patch1: asciidoc-8.4.5-use-unsafe-mode-by-default.patch
-Requires: python >= 2.3
+BuildRequires: python >= 2.4
+Requires: python >= 2.4
+Requires: docbook-style-xsl
+Requires: libxslt
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -37,57 +42,27 @@ for file in CHANGELOG README; do
 done
 
 %build
+%configure
 
 %install
 rm -rf %{buildroot}
-# make directory structure
-%{__install} -d							\
-	%{buildroot}%{_sysconfdir}/asciidoc/filters/code	\
-	%{buildroot}%{_sysconfdir}/asciidoc/filters/graphviz	\
-	%{buildroot}%{_sysconfdir}/asciidoc/filters/music	\
-	%{buildroot}%{_sysconfdir}/asciidoc/filters/source	\
-	%{buildroot}%{_datadir}/asciidoc/docbook-xsl		\
-	%{buildroot}%{_datadir}/asciidoc/stylesheets		\
-	%{buildroot}%{_datadir}/asciidoc/javascripts		\
-	%{buildroot}%{_datadir}/asciidoc/images/icons/callouts	\
-	%{buildroot}%{_datadir}/asciidoc/filters/code		\
-	%{buildroot}%{_datadir}/asciidoc/filters/graphviz	\
-	%{buildroot}%{_datadir}/asciidoc/filters/music		\
-	%{buildroot}%{_bindir}					\
-	%{buildroot}%{_mandir}/man1
+make install DESTDIR=%{buildroot}
 
-# real conf data goes to sysconfdir, rest goes to datadir
-%{__install} -m 0644 *.conf %{buildroot}%{_sysconfdir}/asciidoc
-for filter in code graphviz music source ; do
-	%{__install} -p -m 0644 filters/$filter/*.conf \
-	%{buildroot}%{_sysconfdir}/asciidoc/filters/$filter/
+# real conf data goes to sysconfdir, rest to datadir; symlinks so asciidoc works
+for d in dblatex docbook-xsl images javascripts stylesheets ; do
+    mv %{buildroot}%{_sysconfdir}/asciidoc/$d \
+        %{buildroot}%{_datadir}/asciidoc
+    ln -s %{_datadir}/asciidoc/$d %{buildroot}%{_sysconfdir}/asciidoc/
 done
 
-# filter scripts
-for filter in code graphviz music ; do
-	%{__install} -p -m 0755 filters/$filter/*.py \
-	%{buildroot}%{_datadir}/asciidoc/filters/$filter/
+# Python API
+install -Dpm 644 asciidocapi.py %{buildroot}%{python_sitelib}/asciidocapi.py
+
+# Make it easier to %exclude these with both rpm < and >= 4.7
+for file in %{buildroot}{%{_bindir},%{_datadir}/asciidoc/filters/*}/*.py ; do
+    touch ${file}{c,o}
 done
 
-# symlinks so asciidoc works
-ln -s %{_datadir}/asciidoc/docbook-xsl %{buildroot}%{_sysconfdir}/asciidoc/
-ln -s %{_datadir}/asciidoc/stylesheets %{buildroot}%{_sysconfdir}/asciidoc/
-ln -s %{_datadir}/asciidoc/javascripts %{buildroot}%{_sysconfdir}/asciidoc/
-ln -s %{_datadir}/asciidoc/images %{buildroot}%{_sysconfdir}/asciidoc/
-
-# binaries
-%{__install} -p asciidoc.py %{buildroot}%{_bindir}/asciidoc
-%{__install} -p a2x %{buildroot}%{_bindir}/
-
-# manpages
-%{__install} -m 0644 doc/*.1  %{buildroot}%{_mandir}/man1
-
-# ancillary data
-%{__install} -p -m 0644 docbook-xsl/*.xsl %{buildroot}%{_datadir}/asciidoc/docbook-xsl
-%{__install} -p -m 0644 stylesheets/*.css %{buildroot}%{_datadir}/asciidoc/stylesheets/
-%{__install} -p -m 0644 javascripts/*.js %{buildroot}%{_datadir}/asciidoc/javascripts
-%{__install} -p -m 0644 images/icons/callouts/* %{buildroot}%{_datadir}/asciidoc/images/icons/callouts
-%{__install} -p -m 0644 images/icons/{README,*.png} %{buildroot}%{_datadir}/asciidoc/images/icons
 
 %clean
 rm -rf %{buildroot}
@@ -95,12 +70,23 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,0755)
 %config(noreplace) %{_sysconfdir}/asciidoc
+%exclude %{_bindir}/*.py[co]
 %{_bindir}/*
 %{_mandir}/man1/*
 %{_datadir}/asciidoc/
+%exclude %{_datadir}/asciidoc/filters/*/*.py[co]
+%{python_sitelib}/asciidocapi.py*
 %doc README BUGS CHANGELOG COPYRIGHT
 
 %changelog
+* Tue Sep  8 2009 Ville Skyttä <ville.skytta@iki.fi> - 8.4.5-4
+- Remaining improvements from #480288:
+- Add dependencies on libxslt and docbook-style-xsl.
+- Install dblatex style sheets.
+- Exclude unneeded *.py[co].
+- Install python API.
+- Specfile cleanups.
+
 * Thu Aug 13 2009 Todd Zullinger <tmz@pobox.com> - 8.4.5-3
 - Use 'unsafe' mode by default (bug 506953)
 - Install filter scripts in %%{_datadir}/asciidoc
@@ -156,7 +142,6 @@ rm -rf %{buildroot}
 - use config and _sysconfdir
 
 * Wed Jun 29 2005 Terje Røsten <terje.rosten@ntnu.no> - 7.0.1-1
-
 - 7.0.1
 - Drop patch now upstream
 - Build as noarch (Petr Klíma)

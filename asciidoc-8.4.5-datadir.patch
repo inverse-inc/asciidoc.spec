@@ -1,6 +1,6 @@
 diff -up asciidoc-8.4.5/asciidoc.py.datadir asciidoc-8.4.5/asciidoc.py
---- asciidoc-8.4.5/asciidoc.py.datadir	2009-07-18 14:48:29.000000000 -0400
-+++ asciidoc-8.4.5/asciidoc.py	2009-07-18 14:50:26.000000000 -0400
+--- asciidoc-8.4.5/asciidoc.py.datadir	2009-05-26 05:12:38.000000000 +0300
++++ asciidoc-8.4.5/asciidoc.py	2009-09-08 00:25:23.000000000 +0300
 @@ -651,6 +651,8 @@ def filter_lines(filter_cmd, lines, attr
          if not found:
              found = findfilter(filtername, CONF_DIR, cmd)
@@ -19,8 +19,8 @@ diff -up asciidoc-8.4.5/asciidoc.py.datadir asciidoc-8.4.5/asciidoc.py
  
  # Globals
 diff -up asciidoc-8.4.5/Makefile.in.datadir asciidoc-8.4.5/Makefile.in
---- asciidoc-8.4.5/Makefile.in.datadir	2009-04-23 18:49:43.000000000 -0400
-+++ asciidoc-8.4.5/Makefile.in	2009-07-18 14:46:22.000000000 -0400
+--- asciidoc-8.4.5/Makefile.in.datadir	2009-04-24 01:49:43.000000000 +0300
++++ asciidoc-8.4.5/Makefile.in	2009-09-08 00:28:23.000000000 +0300
 @@ -23,6 +23,7 @@ srcdir = @srcdir@
  VPATH = @srcdir@
  
@@ -29,7 +29,39 @@ diff -up asciidoc-8.4.5/Makefile.in.datadir asciidoc-8.4.5/Makefile.in
  
  prog = asciidoc.py a2x
  progdir = $(bindir)
-@@ -126,6 +127,13 @@ fixconfpath:
+@@ -35,25 +36,26 @@ manpdir = $(mandir)/man1
+ conf = $(wildcard *.conf)
+ confdir = $(ASCIIDOCCONF)
+ 
+-filtersdir = $(ASCIIDOCCONF)/filters
++filtersdir = $(ASCIIDOCDATA)/filters
++filtersconfdir = $(ASCIIDOCCONF)/filters
+ 
+ codefilter = filters/code/code-filter.py
+ codefilterdir = $(filtersdir)/code
+ codefilterconf = filters/code/code-filter.conf
+-codefilterconfdir = $(filtersdir)/code
++codefilterconfdir = $(filtersconfdir)/code
+ 
+ graphvizfilter = filters/graphviz/graphviz2png.py
+ graphvizfilterdir = $(filtersdir)/graphviz
+ graphvizfilterconf = filters/graphviz/graphviz-filter.conf
+-graphvizfilterconfdir = $(filtersdir)/graphviz
++graphvizfilterconfdir = $(filtersconfdir)/graphviz
+ 
+ musicfilter = filters/music/music2png.py
+ musicfilterdir = $(filtersdir)/music
+ musicfilterconf = filters/music/music-filter.conf
+-musicfilterconfdir = $(filtersdir)/music
++musicfilterconfdir = $(filtersconfdir)/music
+ 
+ sourcefilterconf = filters/source/source-highlight-filter.conf
+-sourcefilterconfdir = $(filtersdir)/source
++sourcefilterconfdir = $(filtersconfdir)/source
+ 
+ docbook = $(wildcard docbook-xsl/*.xsl)
+ docbookdir = $(ASCIIDOCCONF)/docbook-xsl
+@@ -126,6 +128,13 @@ fixconfpath:
  		mv $$f.out $$f; \
  	done
  
@@ -43,7 +75,7 @@ diff -up asciidoc-8.4.5/Makefile.in.datadir asciidoc-8.4.5/Makefile.in
  install-vim:
  	@for d in $(DESTDIR)/$(vimdir) /etc/vim; do \
  		if ! test -d $$d; then continue; fi ; \
-@@ -145,7 +153,7 @@ uninstall-vim:
+@@ -145,7 +154,7 @@ uninstall-vim:
  	done
  
  
