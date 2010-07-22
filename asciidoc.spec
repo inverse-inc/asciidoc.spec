@@ -3,7 +3,7 @@
 Summary: Text based document generation
 Name: asciidoc
 Version: 8.4.5
-Release: 4%{?dist}
+Release: 5%{?dist}
 # The python code does not specify a version.
 # The javascript example code is GPLv2+.
 License: GPL+ and GPLv2+
@@ -79,6 +79,9 @@ rm -rf %{buildroot}
 %doc README BUGS CHANGELOG COPYRIGHT
 
 %changelog
+* Wed Jul 21 2010 David Malcolm <dmalcolm@redhat.com> - 8.4.5-5
+- Rebuilt for https://fedoraproject.org/wiki/Features/Python_2.7/MassRebuild
+
 * Tue Sep  8 2009 Ville Skyttä <ville.skytta@iki.fi> - 8.4.5-4
 - Remaining improvements from #480288:
 - Add dependencies on libxslt and docbook-style-xsl.
