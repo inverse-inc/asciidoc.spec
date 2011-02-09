@@ -3,7 +3,7 @@
 Summary: Text based document generation
 Name: asciidoc
 Version: 8.4.5
-Release: 5%{?dist}
+Release: 6%{?dist}
 # The python code does not specify a version.
 # The javascript example code is GPLv2+.
 License: GPL+ and GPLv2+
@@ -79,6 +79,9 @@ rm -rf %{buildroot}
 %doc README BUGS CHANGELOG COPYRIGHT
 
 %changelog
+* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.4.5-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Wed Jul 21 2010 David Malcolm <dmalcolm@redhat.com> - 8.4.5-5
 - Rebuilt for https://fedoraproject.org/wiki/Features/Python_2.7/MassRebuild
 
