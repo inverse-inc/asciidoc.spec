@@ -2,18 +2,16 @@
 
 Summary: Text based document generation
 Name: asciidoc
-Version: 8.4.5
-Release: 7%{?dist}
+Version: 8.6.7
+Release: 1%{?dist}
 # The python code does not specify a version.
 # The javascript example code is GPLv2+.
 License: GPL+ and GPLv2+
 Group: Applications/System
 URL: http://www.methods.co.nz/asciidoc/
-Source0: http://www.methods.co.nz/asciidoc/%{name}-%{version}.tar.gz
+Source0: http://sourceforge.net/projects/asciidoc/files/%{name}/%{version}/%{name}-%{version}.tar.gz
 # http://groups.google.com/group/asciidoc/browse_thread/thread/7f7a633c5b11ddc3
-Patch0: asciidoc-8.4.5-datadir.patch
-# https://bugzilla.redhat.com/506953
-Patch1: asciidoc-8.4.5-use-unsafe-mode-by-default.patch
+#Patch0: asciidoc-8.4.5-datadir.patch
 BuildRequires: python >= 2.4
 Requires: python >= 2.4
 Requires: docbook-style-xsl
@@ -28,8 +26,7 @@ to HTML and DocBook markups using the asciidoc(1) command.
 
 %prep
 %setup -q
-%patch0 -p1 -b .datadir
-%patch1 -p1 -b .use-unsafe-mode-by-default
+#%patch0 -p1 -b .datadir
 
 # Fix line endings on COPYRIGHT file
 sed -i "s/\r//g" COPYRIGHT
@@ -59,7 +56,9 @@ done
 install -Dpm 644 asciidocapi.py %{buildroot}%{python_sitelib}/asciidocapi.py
 
 # Make it easier to %exclude these with both rpm < and >= 4.7
-for file in %{buildroot}{%{_bindir},%{_datadir}/asciidoc/filters/*}/*.py ; do
+for file in %{buildroot}{%{_bindir},%{_sysconfdir}/asciidoc/filters/*}/*.py ; do
+#disabled because datadir patch was dropped
+#for file in %{buildroot}{%{_bindir},%{_datadir}/asciidoc/filters/*}/*.py ; do
     touch ${file}{c,o}
 done
 
@@ -79,6 +78,12 @@ rm -rf %{buildroot}
 %doc README BUGS CHANGELOG COPYRIGHT
 
 %changelog
+* Wed Apr 18 2012 Olivier Bilodeau <obilodeau@inverse.ca> 8.6.7-1
+- new upstream version 8.6.7
+- dropped asciidoc-8.4.5-use-unsafe-mode-by-default.patch since it was 
+  integrated upstream: http://groups.google.com/group/asciidoc/browse_frm/thread/ea3a8ea399ae5d2a
+- asciidoc-8.4.5-datadir.patch was disabled. Waiting for upstream feedback.
+
 * Thu Jan 12 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.4.5-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
