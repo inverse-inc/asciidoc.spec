@@ -3,15 +3,15 @@
 Summary: Text based document generation
 Name: asciidoc
 Version: 8.6.7
-Release: 1%{?dist}
+Release: 2%{?dist}
 # The python code does not specify a version.
 # The javascript example code is GPLv2+.
 License: GPL+ and GPLv2+
 Group: Applications/System
 URL: http://www.methods.co.nz/asciidoc/
-Source0: http://sourceforge.net/projects/asciidoc/files/%{name}/%{version}/%{name}-%{version}.tar.gz
-# http://groups.google.com/group/asciidoc/browse_thread/thread/7f7a633c5b11ddc3
-#Patch0: asciidoc-8.4.5-datadir.patch
+Source: http://sourceforge.net/projects/asciidoc/files/%{name}/%{version}/%{name}-%{version}.tar.gz
+# patch taken from Repoforge's asciidoc SPEC
+Patch0: asciidoc-8.6.1-datadir.patch
 BuildRequires: python >= 2.4
 Requires: python >= 2.4
 Requires: docbook-style-xsl
@@ -57,9 +57,12 @@ install -Dpm 644 asciidocapi.py %{buildroot}%{python_sitelib}/asciidocapi.py
 
 # Make it easier to %exclude these with both rpm < and >= 4.7
 for file in %{buildroot}{%{_bindir},%{_sysconfdir}/asciidoc/filters/*}/*.py ; do
-#disabled because datadir patch was dropped
-#for file in %{buildroot}{%{_bindir},%{_datadir}/asciidoc/filters/*}/*.py ; do
     touch ${file}{c,o}
+done
+
+%define vimdir %(ls -d %{_datadir}/vim/{vimfiles,vim[0-9]*} 2>/dev/null | tail -1)
+for file in $(cd vim; find * -type f); do
+    install -Dp -m0644 vim/$file %{buildroot}%{vimdir}/$file
 done
 
 
@@ -67,17 +70,31 @@ done
 rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root,0755)
-%config(noreplace) %{_sysconfdir}/asciidoc
-%exclude %{_bindir}/*.py[co]
-%{_bindir}/*
-%{_mandir}/man1/*
+%defattr(-, root, root, 0755)
+%doc BUGS* CHANGELOG* COPYING COPYRIGHT INSTALL* README*
+%doc doc/ examples/ vim/
+%doc %{_mandir}/man1/a2x.1*
+%doc %{_mandir}/man1/asciidoc.1*
+%config(noreplace) %{_sysconfdir}/asciidoc/
+%{_bindir}/a2x
+%{_bindir}/a2x.py
+%{_bindir}/asciidoc
+%{_bindir}/asciidoc.py
 %{_datadir}/asciidoc/
-%exclude %{_datadir}/asciidoc/filters/*/*.py[co]
 %{python_sitelib}/asciidocapi.py*
-%doc README BUGS CHANGELOG COPYRIGHT
+%dir %{vimdir}
+%dir %{vimdir}/ftdetect/
+%{vimdir}/ftdetect/asciidoc_filetype.vim
+%dir %{vimdir}/syntax/
+%{vimdir}/syntax/asciidoc.vim
+%exclude %{_bindir}/*.py[co]
+%exclude %{_sysconfdir}/asciidoc/filters/*/*.py[co]
 
 %changelog
+* Fri May 04 2012 Olivier Bilodeau <obilodeau@inverse.ca> 8.6.7-2
+- re-integrated datadir patch (from repoforge's SPEC)
+- vim syntax highlight installed
+
 * Wed Apr 18 2012 Olivier Bilodeau <obilodeau@inverse.ca> 8.6.7-1
 - new upstream version 8.6.7
 - dropped asciidoc-8.4.5-use-unsafe-mode-by-default.patch since it was 
